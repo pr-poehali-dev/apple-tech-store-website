@@ -105,7 +105,7 @@ export default function Index() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
               <Icon name="Apple" size={24} className="text-apple-gray" />
-              <span className="text-xl font-semibold text-apple-gray">Store</span>
+              <span className="text-xl font-semibold text-apple-gray">iSTORE66</span>
             </div>
             
             <div className="hidden md:flex space-x-8">
