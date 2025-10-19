@@ -22,26 +22,50 @@ interface CartItem extends Product {
 const products: Product[] = [
   {
     id: 1,
-    name: 'iPhone 15 Pro',
+    name: 'iPhone 16 Pro Max 256GB',
     category: 'iPhone',
-    price: '999',
-    image: 'https://cdn.poehali.dev/projects/f467f675-d567-42fd-8c0c-1be8819acdc5/files/db6bd838-9121-4e05-aeb6-4a92633829ed.jpg',
-    description: 'Титановый корпус. Чип A17 Pro. Кнопка действия.'
+    price: '0',
+    image: 'https://cdn.poehali.dev/projects/f467f675-d567-42fd-8c0c-1be8819acdc5/files/aa486cd3-7b4c-4961-98a8-badb21c55841.jpg',
+    description: 'Титановый корпус. Чип A18 Pro. 256GB памяти.'
   },
   {
     id: 2,
-    name: 'MacBook Pro M3',
-    category: 'Mac',
-    price: '1999',
-    image: 'https://cdn.poehali.dev/projects/f467f675-d567-42fd-8c0c-1be8819acdc5/files/f6276020-c350-4a3a-80b6-9d7cab0bfa1c.jpg',
-    description: 'Невероятная производительность. Дисплей Liquid Retina XDR.'
+    name: 'iPhone 16 Pro Max 512GB',
+    category: 'iPhone',
+    price: '0',
+    image: 'https://cdn.poehali.dev/projects/f467f675-d567-42fd-8c0c-1be8819acdc5/files/aa486cd3-7b4c-4961-98a8-badb21c55841.jpg',
+    description: 'Титановый корпус. Чип A18 Pro. 512GB памяти.'
   },
   {
     id: 3,
+    name: 'iPhone 16 Pro Max 1TB',
+    category: 'iPhone',
+    price: '0',
+    image: 'https://cdn.poehali.dev/projects/f467f675-d567-42fd-8c0c-1be8819acdc5/files/aa486cd3-7b4c-4961-98a8-badb21c55841.jpg',
+    description: 'Титановый корпус. Чип A18 Pro. 1TB памяти.'
+  },
+  {
+    id: 4,
+    name: 'iPhone 15 Pro',
+    category: 'iPhone',
+    price: '999',
+    image: 'https://cdn.poehali.dev/projects/f467f675-d567-42fd-8c0c-1be8819acdc5/files/c08460cf-67cb-4316-848e-808388c942e1.jpg',
+    description: 'Титановый корпус. Чип A17 Pro. Кнопка действия.'
+  },
+  {
+    id: 5,
+    name: 'MacBook Pro M3',
+    category: 'Mac',
+    price: '1999',
+    image: 'https://cdn.poehali.dev/projects/f467f675-d567-42fd-8c0c-1be8819acdc5/files/5d9f0f7a-bbe8-4b6b-9b15-fe9a651f6340.jpg',
+    description: 'Невероятная производительность. Дисплей Liquid Retina XDR.'
+  },
+  {
+    id: 6,
     name: 'iPad Pro',
     category: 'iPad',
     price: '799',
-    image: 'https://cdn.poehali.dev/projects/f467f675-d567-42fd-8c0c-1be8819acdc5/files/855407fa-ff2b-43a6-a2bd-883aeebc7830.jpg',
+    image: 'https://cdn.poehali.dev/projects/f467f675-d567-42fd-8c0c-1be8819acdc5/files/ef598dcc-d3b0-494c-a8a8-0a49c180f5e5.jpg',
     description: 'Чип M2. Дисплей ProMotion. Поддержка Apple Pencil.'
   }
 ];
