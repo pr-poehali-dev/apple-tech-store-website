@@ -3,6 +3,8 @@ import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Badge } from '@/components/ui/badge';
 
 interface Product {
   id: number;
@@ -11,6 +13,10 @@ interface Product {
   price: string;
   image: string;
   description: string;
+}
+
+interface CartItem extends Product {
+  quantity: number;
 }
 
 const products: Product[] = [
@@ -42,6 +48,8 @@ const products: Product[] = [
 
 export default function Index() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const filteredProducts = selectedCategory === 'all' 
     ? products 
@@ -50,6 +58,44 @@ export default function Index() {
   const scrollToSection = (section: string) => {
     const element = document.getElementById(section);
     element?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const addToCart = (product: Product) => {
+    setCart(prevCart => {
+      const existingItem = prevCart.find(item => item.id === product.id);
+      if (existingItem) {
+        return prevCart.map(item =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+      return [...prevCart, { ...product, quantity: 1 }];
+    });
+  };
+
+  const removeFromCart = (productId: number) => {
+    setCart(prevCart => prevCart.filter(item => item.id !== productId));
+  };
+
+  const updateQuantity = (productId: number, newQuantity: number) => {
+    if (newQuantity <= 0) {
+      removeFromCart(productId);
+      return;
+    }
+    setCart(prevCart =>
+      prevCart.map(item =>
+        item.id === productId ? { ...item, quantity: newQuantity } : item
+      )
+    );
+  };
+
+  const getTotalPrice = () => {
+    return cart.reduce((total, item) => total + parseInt(item.price) * item.quantity, 0);
+  };
+
+  const getTotalItems = () => {
+    return cart.reduce((total, item) => total + item.quantity, 0);
   };
 
   return (
@@ -89,9 +135,93 @@ export default function Index() {
               </button>
             </div>
 
-            <Button variant="ghost" size="icon" className="md:hidden">
-              <Icon name="Menu" size={24} />
-            </Button>
+            <div className="flex items-center gap-2">
+              <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon" className="relative">
+                    <Icon name="ShoppingCart" size={24} />
+                    {getTotalItems() > 0 && (
+                      <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-apple-blue text-white text-xs">
+                        {getTotalItems()}
+                      </Badge>
+                    )}
+                  </Button>
+                </SheetTrigger>
+                <SheetContent className="w-full sm:max-w-lg">
+                  <SheetHeader>
+                    <SheetTitle className="text-2xl font-semibold">Корзина</SheetTitle>
+                  </SheetHeader>
+                  <div className="mt-8 flex flex-col h-full">
+                    {cart.length === 0 ? (
+                      <div className="flex-1 flex flex-col items-center justify-center text-center py-12">
+                        <Icon name="ShoppingCart" size={64} className="text-gray-300 mb-4" />
+                        <p className="text-lg text-gray-600">Корзина пуста</p>
+                        <p className="text-sm text-gray-400 mt-2">Добавьте товары из каталога</p>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="flex-1 overflow-y-auto space-y-4 pb-4">
+                          {cart.map(item => (
+                            <Card key={item.id} className="border shadow-sm rounded-2xl overflow-hidden">
+                              <CardContent className="p-4">
+                                <div className="flex gap-4">
+                                  <div className="w-20 h-20 bg-apple-light rounded-xl overflow-hidden flex-shrink-0">
+                                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <h4 className="font-semibold text-base truncate">{item.name}</h4>
+                                    <p className="text-sm text-gray-600 mt-1">${item.price}</p>
+                                    <div className="flex items-center gap-3 mt-3">
+                                      <div className="flex items-center gap-2 bg-apple-light rounded-full px-3 py-1">
+                                        <button
+                                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                          className="text-gray-600 hover:text-apple-blue transition-colors"
+                                        >
+                                          <Icon name="Minus" size={16} />
+                                        </button>
+                                        <span className="font-medium w-8 text-center">{item.quantity}</span>
+                                        <button
+                                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                          className="text-gray-600 hover:text-apple-blue transition-colors"
+                                        >
+                                          <Icon name="Plus" size={16} />
+                                        </button>
+                                      </div>
+                                      <button
+                                        onClick={() => removeFromCart(item.id)}
+                                        className="text-gray-400 hover:text-red-500 transition-colors ml-auto"
+                                      >
+                                        <Icon name="Trash2" size={18} />
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          ))}
+                        </div>
+                        <div className="border-t pt-6 pb-6 space-y-4">
+                          <div className="flex justify-between items-center text-lg">
+                            <span className="font-medium">Товаров:</span>
+                            <span className="text-gray-600">{getTotalItems()} шт.</span>
+                          </div>
+                          <div className="flex justify-between items-center text-2xl font-semibold">
+                            <span>Итого:</span>
+                            <span className="text-apple-blue">${getTotalPrice()}</span>
+                          </div>
+                          <Button className="w-full bg-apple-blue hover:bg-apple-blue/90 text-white py-6 text-lg rounded-xl">
+                            Оформить заказ
+                          </Button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </SheetContent>
+              </Sheet>
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <Icon name="Menu" size={24} />
+              </Button>
+            </div>
           </div>
         </div>
       </nav>
@@ -179,7 +309,10 @@ export default function Index() {
                   <CardContent className="p-8 pt-0">
                     <div className="flex justify-between items-center">
                       <p className="text-3xl font-semibold text-apple-gray">от ${product.price}</p>
-                      <Button className="bg-apple-blue hover:bg-apple-blue/90 rounded-full px-6">
+                      <Button 
+                        onClick={() => addToCart(product)}
+                        className="bg-apple-blue hover:bg-apple-blue/90 rounded-full px-6"
+                      >
                         Купить
                       </Button>
                     </div>
